@@ -20,20 +20,22 @@ public class LineDrawing : MonoBehaviour
     public InputField endY;
 
     
-    
-
     void Start()
     {
         // 직각 좌표계 그리기
-        cartesianLine.positionCount = 2;
-        cartesianLine.SetPositions(new Vector3[] { new Vector3(origin.x, origin.y, 0f), new Vector3(xAxisEnd.x, xAxisEnd.y, 0f) });
-        cartesianLine.positionCount += 1;
-        cartesianLine.SetPosition(lineRenderer.positionCount - 1, new Vector3(yAxisEnd.x, yAxisEnd.y, 0f));
+        for (int i = 0; i < 10; i++)
+        {
+            cartesianLine.positionCount = 2;
+            cartesianLine.SetPositions(new Vector3[] { new Vector3(origin.x, origin.y, 0f), new Vector3(xAxisEnd.x, xAxisEnd.y, 0f) });
+            cartesianLine.positionCount += 1;
+            cartesianLine.SetPosition(lineRenderer.positionCount - 1, new Vector3(yAxisEnd.x, yAxisEnd.y, 0f));
+        }
+        
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown("a"))
         {
             Vector3 start = new Vector3(float.Parse(startX.text), float.Parse(startY.text), 0f);
             Vector3 end = new Vector3(float.Parse(endX.text), float.Parse(endY.text), 0f);
