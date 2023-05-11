@@ -6,12 +6,6 @@ using TMPro;
 
 public class LineDrawing : MonoBehaviour
 {
-    [Header("Cartesian Coordinate Element")]
-    public LineRenderer cartesianLine;
-    public Vector2Int origin = new Vector2Int(0, 0); // 좌표계의 원점
-    public Vector2Int xAxisEnd = new Vector2Int(10, 0); // x축의 끝점
-    public Vector2Int yAxisEnd = new Vector2Int(0, 10); // y축의 끝점
-
     [Header("Line Drawing Element")]
     public LineRenderer lineRenderer;
     public InputField startX;
@@ -21,15 +15,7 @@ public class LineDrawing : MonoBehaviour
 
     
     void Start()
-    {
-        // 직각 좌표계 그리기
-        for (int i = 0; i < 10; i++)
-        {
-            cartesianLine.positionCount = 2;
-            cartesianLine.SetPositions(new Vector3[] { new Vector3(origin.x, origin.y, 0f), new Vector3(xAxisEnd.x, xAxisEnd.y, 0f) });
-            cartesianLine.positionCount += 1;
-            cartesianLine.SetPosition(lineRenderer.positionCount - 1, new Vector3(yAxisEnd.x, yAxisEnd.y, 0f));
-        }
+    {       
         
     }
 
