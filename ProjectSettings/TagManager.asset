@@ -6,6 +6,7 @@ TagManager:
   tags:
   - line
   - Cartesian
+  - pixel
   layers:
   - Default
   - TransparentFX

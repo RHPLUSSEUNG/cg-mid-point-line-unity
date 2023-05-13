@@ -8,21 +8,30 @@ public class midpointAl : MonoBehaviour
     public float lineWidth;
 
     private LineRenderer lineRenderer;
-
+    
     OriginalLine originLine;
 
     [Header("Pixel Element")]
     public GameObject pixelPrefab; // Circle Sprite의 Prefab을 할당합니다.
     public float pixelSize = 0.1f; // Circle Sprite의 크기를 조정합니다.
+    bool isTrans;
 
+    [Header("Translation Element")]
+    public Vector3 translationVector;
 
-    private void Start()
+    private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
         originLine = GameObject.Find("Original Line").GetComponent<OriginalLine>();
+    }
 
+    private void Start()
+    {        
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
+
+        isTrans = false;
+
         originLine.SetOriginalLine(startPoint, endPoint);
         DrawLine(startPoint, endPoint);
         SetPixel();
@@ -30,7 +39,13 @@ public class midpointAl : MonoBehaviour
 
     private void Update()
     {
-
+        if(Input.GetKeyDown(KeyCode.Return))
+        {
+            TranslateObject();
+            originLine.SetOriginalLine(startPoint, endPoint);
+            DrawLine(startPoint, endPoint);
+            SetPixel();
+        }
     }
 
     void DrawLine(Vector3 start, Vector3 end)
@@ -110,22 +125,43 @@ public class midpointAl : MonoBehaviour
 
     void SetPixel()
     {
+        isTrans = false;
+
         for (int i = 0; i < lineRenderer.positionCount; i++)
         {
             Vector3 pointPosition = lineRenderer.GetPosition(i);
 
-            GameObject circle = Instantiate(pixelPrefab, pointPosition, Quaternion.identity);
-            circle.transform.localScale = new Vector3(pixelSize, pixelSize, 1f);
+            GameObject _circle = ObjectPooler.Instance.GetPixel(PixelType.PIXEL);
+            _circle.transform.position = pointPosition;                        
+            _circle.transform.localScale = new Vector3(pixelSize, pixelSize, 1f);
+            _circle.SetActive(true);
         }
 
     }
 
-    void SetCartesian(Vector3 _startPoint, Vector3 _endPoint)
+    void TranslateObject()
     {
-        /*
-        int deltaX = Mathf.RoundToInt(end.x - start.x);
-        int deltaY = Mathf.RoundToInt(end.y - start.y);
-        int maxX = Mathf.Max(Mathf.Abs(_startPoint.x), Mathf.Abs(_endPoint.y));
-        */
+        isTrans = true;
+
+        // 동차 좌표 변환 행렬 생성
+        Matrix4x4 translationMatrix = Matrix4x4.Translate(new Vector3(translationVector.x, translationVector.y, 0f));
+
+        // 현재 객체의 위치를 가져옴
+        Vector3 currentPosition = transform.position;
+
+        // startPoint와 endPoint에 이동 변환을 적용
+        startPoint = translationMatrix.MultiplyPoint3x4(startPoint);
+        endPoint = translationMatrix.MultiplyPoint3x4(endPoint);
+
+        // Z 축 값은 2D에서 사용되지 않으므로 0으로 설정
+        startPoint.z = 0f;
+        endPoint.z = 0f;        
     }
+
+    public bool GetisTrans()
+    {
+        return isTrans;
+    }
+
+
 }

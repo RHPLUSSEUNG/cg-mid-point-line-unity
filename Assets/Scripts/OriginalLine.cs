@@ -9,9 +9,6 @@ public class OriginalLine : MonoBehaviour
     private void Start()
     {
         originLr = GetComponent<LineRenderer>();
-        originLr.startWidth = lineWidth;
-        originLr.endWidth = lineWidth;
-
     }
 
     public void SetOriginalLine(Vector3 _startPoint, Vector3 _endPoint)
