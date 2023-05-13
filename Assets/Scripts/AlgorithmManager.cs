@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class midpointAl : MonoBehaviour
+public class AlgorithmManager : MonoBehaviour
 {
     [Header("Line Element")]
     public Vector3 startPoint;

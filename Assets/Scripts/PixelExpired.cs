@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class PixelExpired : MonoBehaviour
 {
-    midpointAl line;
+    AlgorithmManager line;
     bool isTrans = false;
 
     private void Awake()
     {
-        line = GameObject.Find("Line").GetComponent<midpointAl>();
+        line = GameObject.Find("Line").GetComponent<AlgorithmManager>();
     }
     private void Update()
     {
