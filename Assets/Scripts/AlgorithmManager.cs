@@ -1,7 +1,18 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AlgorithmManager : MonoBehaviour
 {
+    [Header("Environment Element")]
+    [SerializeField] TMP_InputField startX;
+    [SerializeField] TMP_InputField startY;
+    [SerializeField] TMP_InputField endX;
+    [SerializeField] TMP_InputField endY;
+    [SerializeField] Button startButton;
+    [SerializeField] Button translationButton;
+    [SerializeField] GameObject preStartObject;
+
     [Header("Line Element")]
     public Vector3 startPoint;
     public Vector3 endPoint;
@@ -30,11 +41,7 @@ public class AlgorithmManager : MonoBehaviour
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
 
-        isTrans = false;
-
-        originLine.SetOriginalLine(startPoint, endPoint);
-        DrawLine(startPoint, endPoint);
-        SetPixel();
+        isTrans = false;        
     }
 
     private void Update()
@@ -122,6 +129,24 @@ public class AlgorithmManager : MonoBehaviour
         int deltaY = Mathf.RoundToInt(end.y - start.y);
         return Mathf.Max(Mathf.Abs(deltaX), Mathf.Abs(deltaY)) + 1;
     }
+    void TranslateObject()
+    {
+        isTrans = true;
+
+        // 동차 좌표 변환 행렬 생성
+        Matrix4x4 translationMatrix = Matrix4x4.Translate(new Vector3(translationVector.x, translationVector.y, 0f));
+
+        // 현재 객체의 위치를 가져옴
+        Vector3 currentPosition = transform.position;
+
+        // startPoint와 endPoint에 이동 변환을 적용
+        startPoint = translationMatrix.MultiplyPoint3x4(startPoint);
+        endPoint = translationMatrix.MultiplyPoint3x4(endPoint);
+
+        // Z 축 값은 2D에서 사용되지 않으므로 0으로 설정
+        startPoint.z = 0f;
+        endPoint.z = 0f;
+    }
 
     void SetPixel()
     {
@@ -139,28 +164,27 @@ public class AlgorithmManager : MonoBehaviour
 
     }
 
-    void TranslateObject()
+    public void LineStart()
     {
-        isTrans = true;
+        startPoint = new Vector3(float.Parse(startX.text), float.Parse(startY.text), 0);
+        endPoint = new Vector3(float.Parse(endX.text), float.Parse(endY.text), 0);
 
-        // 동차 좌표 변환 행렬 생성
-        Matrix4x4 translationMatrix = Matrix4x4.Translate(new Vector3(translationVector.x, translationVector.y, 0f));
+        preStartObject.SetActive(false);
 
-        // 현재 객체의 위치를 가져옴
-        Vector3 currentPosition = transform.position;
-
-        // startPoint와 endPoint에 이동 변환을 적용
-        startPoint = translationMatrix.MultiplyPoint3x4(startPoint);
-        endPoint = translationMatrix.MultiplyPoint3x4(endPoint);
-
-        // Z 축 값은 2D에서 사용되지 않으므로 0으로 설정
-        startPoint.z = 0f;
-        endPoint.z = 0f;        
+        originLine.SetOriginalLine(startPoint, endPoint);
+        DrawLine(startPoint, endPoint);
+        SetPixel();
     }
-
+    
     public bool GetisTrans()
     {
         return isTrans;
+    }
+
+    
+    public void GameExit()
+    {
+        Application.Quit();
     }
 
 
