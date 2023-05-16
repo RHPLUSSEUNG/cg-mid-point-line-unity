@@ -4,16 +4,18 @@ using UnityEngine.UI;
 
 public class AlgorithmManager : MonoBehaviour
 {
-    [Header("Environment Element")]
+    [Header("Environment Element")]    
+    [SerializeField] Button startButton;
+    [SerializeField] Button translationButton;
+    [SerializeField] Button transStartButton;
+    [SerializeField] GameObject preStartObject;
+    [SerializeField] GameObject inGameObject;
+
+    [Header("Line Element")]
     [SerializeField] TMP_InputField startX;
     [SerializeField] TMP_InputField startY;
     [SerializeField] TMP_InputField endX;
     [SerializeField] TMP_InputField endY;
-    [SerializeField] Button startButton;
-    [SerializeField] Button translationButton;
-    [SerializeField] GameObject preStartObject;
-
-    [Header("Line Element")]
     public Vector3 startPoint;
     public Vector3 endPoint;
     public float lineWidth;
@@ -28,6 +30,8 @@ public class AlgorithmManager : MonoBehaviour
     bool isTrans;
 
     [Header("Translation Element")]
+    [SerializeField] TMP_InputField transX;
+    [SerializeField] TMP_InputField transY;
     public Vector3 translationVector;
 
     private void Awake()
@@ -41,18 +45,13 @@ public class AlgorithmManager : MonoBehaviour
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
 
-        isTrans = false;        
+        isTrans = false;
+        inGameObject.SetActive(false);
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Return))
-        {
-            TranslateObject();
-            originLine.SetOriginalLine(startPoint, endPoint);
-            DrawLine(startPoint, endPoint);
-            SetPixel();
-        }
+
     }
 
     void DrawLine(Vector3 start, Vector3 end)
@@ -129,9 +128,14 @@ public class AlgorithmManager : MonoBehaviour
         int deltaY = Mathf.RoundToInt(end.y - start.y);
         return Mathf.Max(Mathf.Abs(deltaX), Mathf.Abs(deltaY)) + 1;
     }
-    void TranslateObject()
+    public void TranslateObject()
     {
-        isTrans = true;
+        inGameObject.SetActive(false);
+        translationButton.gameObject.SetActive(true);
+
+        isTrans = true;                
+
+        translationVector = new Vector3(float.Parse(transX.text), float.Parse(transY.text), 0);
 
         // 동차 좌표 변환 행렬 생성
         Matrix4x4 translationMatrix = Matrix4x4.Translate(new Vector3(translationVector.x, translationVector.y, 0f));
@@ -146,6 +150,11 @@ public class AlgorithmManager : MonoBehaviour
         // Z 축 값은 2D에서 사용되지 않으므로 0으로 설정
         startPoint.z = 0f;
         endPoint.z = 0f;
+
+        originLine.SetOriginalLine(startPoint, endPoint);
+        DrawLine(startPoint, endPoint);
+        SetPixel();
+
     }
 
     void SetPixel()
@@ -176,6 +185,11 @@ public class AlgorithmManager : MonoBehaviour
         SetPixel();
     }
     
+    public void ActiveTransMenu()
+    {
+        inGameObject.SetActive(true);
+        translationButton.gameObject.SetActive(false);
+    }
     public bool GetisTrans()
     {
         return isTrans;
