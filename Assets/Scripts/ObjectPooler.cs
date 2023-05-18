@@ -64,4 +64,13 @@ public class ObjectPooler : MonoBehaviour
         }
         return null;
     }
+
+    public void PixelExpired()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.transform.position = Vector3.zero;
+            child.gameObject.SetActive(false);
+        }
+    }
 }
