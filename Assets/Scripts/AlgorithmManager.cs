@@ -115,7 +115,7 @@ public class AlgorithmManager : MonoBehaviour
         return Mathf.Max(Mathf.Abs(deltaX), Mathf.Abs(deltaY)) + 1;
     }
 
-    public void TranslateObject()
+    public void TranslateObject() //Translation
     {
         inGameObject.SetActive(false);
         translationButton.gameObject.SetActive(true);
@@ -139,7 +139,7 @@ public class AlgorithmManager : MonoBehaviour
 
     }
 
-    void SetPixel()
+    void SetPixel() //Pixel น่มค
     {
         Vector3[] linePositions = new Vector3[lineRenderer.positionCount];
         lineRenderer.GetPositions(linePositions);
